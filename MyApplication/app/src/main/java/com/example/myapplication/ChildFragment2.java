@@ -1,17 +1,22 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,100 +32,112 @@ import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.content.DialogInterface;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.HorizontalCalendarListener;
 
-public class ChildFragment1 extends Fragment {
+public class ChildFragment2 extends Fragment {
 
-    public static final String LOG_TAG = "ChildFragment1(Recruit)";
+    public static final String LOG_TAG = "ChildFragment2(Match)";
     public static final String QUEUE_TAG = "VolleyRequest";
 
     protected RequestQueue mQueue = null;
     JSONObject mResult = null;
-    ArrayList<recruitInfo> recruitInfoArrayList = new ArrayList<recruitInfo>();
-    protected RecruitAdapter mAdapter = new RecruitAdapter(recruitInfoArrayList);
+    ArrayList<matchInfo> matchInfoArrayList = new ArrayList<matchInfo>();
+    protected MatchAdapter mAdapter = new MatchAdapter(matchInfoArrayList);
     SessionManager mSession = SessionManager.getInstance(getContext());
+
+    CustomDialogCombo customDialogComboMatch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_child_fragment1, container, false);
+        View v = inflater.inflate(R.layout.fragment_child_fragment2, container, false);
 
-        FloatingActionButton btWrite = (FloatingActionButton) v.findViewById(R.id.fab);
+        FloatingActionButton tvWrite = (FloatingActionButton) v.findViewById(R.id.fab);
         RecyclerView mRecyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mRecyclerView.setHasFixedSize(true);
 
-        btWrite.setOnClickListener(new View.OnClickListener() {
+        tvWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if(!Menu3Fragment.stCategory.equals("ALL") && mSession.isLogin())
+
+                customDialogComboMatch = new CustomDialogCombo(v.getContext());
+
+                if(!Menu3Fragment.stCategory.equals("전체") && mSession.isLogin())
                 {
-                    // TODO Auto-generated method stub
-                    AlertDialog.Builder dlWrite = new AlertDialog.Builder(v.getContext());
-                    dlWrite.setTitle(Menu3Fragment.stCategory+"인원모집 글쓰기");
 
-                    LinearLayout etLayout = new LinearLayout(v.getContext());
-                    etLayout.setOrientation(LinearLayout.VERTICAL);
-                    final EditText etTotal_num = new EditText(v.getContext());
-                    etTotal_num.setHint("총 인원 입력 부분");
-                    etLayout.addView(etTotal_num);
-                    final EditText etRecruit_num = new EditText(v.getContext());
-                    etRecruit_num.setHint("모집 인원 입력 부분");
-                    etLayout.addView(etRecruit_num);
-                    final EditText etTime = new EditText(v.getContext());
-                    etTime.setHint("시간 입력 부분");
-                    etLayout.addView(etTime);
-                    final EditText etArea = new EditText(v.getContext());
-                    etArea.setHint("장소 입력 부분");
-                    etLayout.addView(etArea);
-                    dlWrite.setView(etLayout);
+                    final Dialog dlg_combo = new Dialog(v.getContext());
+                    // 액티비티의 타이틀바를 숨긴다.
+                    dlg_combo.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-                    dlWrite.setPositiveButton("입력완료",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id)
-                                {
-                                    // 프로그램을 종료한다
-                                    String insert_activity = Menu3Fragment.stCategory;
-                                    String insert_time = etTime.getText().toString();
-                                    String insert_area = etArea.getText().toString();
-                                    String insert_total_num = etTotal_num.getText().toString();
-                                    String insert_recruit_num = etRecruit_num.getText().toString();
+                    // 커스텀 다이얼로그의 레이아웃을 설정한다.
+                    dlg_combo.setContentView(R.layout.custom_dialog_match);
 
-                                    writeRecruit(new recruitInfo(insert_activity, insert_time, insert_area, insert_total_num, insert_recruit_num));
+                    // 커스텀 다이얼로그를 노출한다.
 
-                                    dialog.dismiss(); // 누르면 바로 닫히는 형태
-                                }
-                            });
+                    TextView title_combo = (TextView) dlg_combo.findViewById(R.id.dialogTitleCombo);
 
-                    dlWrite.setNegativeButton("취소",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id)
-                                {
-                                    // 프로그램을 종료한다
-                                    dialog.dismiss(); // 누르면 바로 닫히는 형태
-                                }
-                            });
-                    dlWrite.show();
+                    final EditText team_name_combo = (EditText) dlg_combo.findViewById(R.id.totalCombo);
+
+                    final EditText recruit_combo = (EditText) dlg_combo.findViewById(R.id.recruitCombo);
+
+                    final Spinner spinner1_combo = (Spinner) dlg_combo.findViewById(R.id.spiner1Combo);
+
+                    final Spinner spinner2_combo = (Spinner) dlg_combo.findViewById(R.id.spiner2Combo);
+
+                    final EditText area_combo = (EditText) dlg_combo.findViewById(R.id.areaCombo);
+
+                    final Button cancle_button_combo = (Button) dlg_combo.findViewById(R.id.cancleButtonCombo);
+
+                    final Button ok_button_combo = (Button) dlg_combo.findViewById(R.id.okButtonCombo);
+
+                    ok_button_combo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //main_label.setText(txt_modify_edit.getText().toString());
+                            String insert_activity = Menu3Fragment.stCategory;
+                            String insert_time1 = spinner1_combo.getSelectedItem().toString();
+                            String insert_time2 = spinner2_combo.getSelectedItem().toString();
+                            String insert_time = insert_time1 + " ~ " + insert_time2;
+                            String insert_area = area_combo.getText().toString();
+                            String insert_total_num = team_name_combo.getText().toString();
+                            String insert_recruit_num = recruit_combo.getText().toString();
+
+                            writeMatch(new matchInfo(insert_activity, insert_time, insert_area, insert_total_num, insert_recruit_num));
+
+                            dlg_combo.dismiss(); // 누르면 바로 닫히는 형태
+                        }
+                    });
+
+                    cancle_button_combo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            dlg_combo.dismiss(); // 누르면 바로 닫히는 형태
+                        }
+                    });
+
+                    dlg_combo.show();
+
+
                 }
-                else if (Menu3Fragment.stCategory.equals("ALL") && mSession.isLogin())
+                else if (Menu3Fragment.stCategory.equals("전체") && mSession.isLogin())
                 {
                     Toast.makeText(v.getContext(), "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getContext(),"로그인하시면 쓸 수 있습니다.", Toast.LENGTH_SHORT).show();
                 }
-
             }
 
         });
@@ -128,23 +145,23 @@ public class ChildFragment1 extends Fragment {
         CookieHandler.setDefault(new CookieManager());
 
         mQueue = mSession.getQueue();
-        requestRecruit();
+        requestMatch();
         return v;
     }
 
-    public class recruitInfo {
+
+    public class matchInfo {
         public String category;
         public String time;
         public String area;
-        public String total_num;
+        public String team_name;
         public String recruit_num;
 
-        public recruitInfo(String category, String time, String area, String total_num, String recruit_num) {
-
+        public matchInfo(String category, String time, String area, String team_name, String recruit_num){
             this.category = category;
             this.time = time;
             this.area = area;
-            this.total_num = total_num;
+            this.team_name = team_name;
             this.recruit_num = recruit_num;
         }
 
@@ -160,8 +177,8 @@ public class ChildFragment1 extends Fragment {
             return area;
         }
 
-        public String getTotal_num() {
-            return total_num;
+        public String getTeam_name() {
+            return team_name;
         }
 
         public String getRecruit_num() {
@@ -169,9 +186,9 @@ public class ChildFragment1 extends Fragment {
         }
     }
 
-    public class RecruitAdapter extends RecyclerView.Adapter<RecruitAdapter.ViewHolder>  {
+    public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.ViewHolder>  {
 
-        ArrayList<recruitInfo> recruitInfoArrayList = null;
+        ArrayList<matchInfo> matchInfoArrayList = null;
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvCategory;
@@ -190,7 +207,7 @@ public class ChildFragment1 extends Fragment {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dlJoin = new AlertDialog.Builder(v.getContext());
+                android.support.v7.app.AlertDialog.Builder dlJoin = new android.support.v7.app.AlertDialog.Builder(v.getContext());
                 dlJoin.setTitle("참가여부");
 
                 LinearLayout tvLayout = new LinearLayout(v.getContext());
@@ -205,10 +222,10 @@ public class ChildFragment1 extends Fragment {
                 dlArea.setText("    장소:"+tvArea.getText());
                 tvLayout.addView(dlArea);
                 final TextView dlRecruit_num = new TextView(v.getContext());
-                dlRecruit_num.setText("    모집인원:"+tvRecruit_num.getText());
+                dlRecruit_num.setText("    매칭인원 (팀 이름):"+tvRecruit_num.getText());
                 tvLayout.addView(dlRecruit_num);
                 final TextView dlMessage = new TextView(v.getContext());
-                dlMessage.setText("    참가하시겠습니까?");
+                dlMessage.setText("    신청하시겠습니까?");
                 tvLayout.addView(dlMessage);
 
                 dlJoin.setView(tvLayout);
@@ -235,34 +252,34 @@ public class ChildFragment1 extends Fragment {
             }
         }
 
-        public RecruitAdapter(ArrayList<recruitInfo> recruitInfoArrayList){
-            this.recruitInfoArrayList = recruitInfoArrayList;
+        public MatchAdapter(ArrayList<matchInfo> matchInfoArrayList){
+            this.matchInfoArrayList = matchInfoArrayList;
         }
 
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MatchAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_row_recruit, parent, false);
-            return new ViewHolder(v);
+            return new MatchAdapter.ViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.tvCategory.setText(recruitInfoArrayList.get(position).category);
-            holder.tvTime.setText(recruitInfoArrayList.get(position).time);
-            holder.tvArea.setText(recruitInfoArrayList.get(position).area);
-            holder.tvRecruit_num.setText((Integer.parseInt(recruitInfoArrayList.get(position).total_num) - Integer.parseInt(recruitInfoArrayList.get(position).recruit_num)) + " / " + recruitInfoArrayList.get(position).total_num);
+        public void onBindViewHolder(MatchAdapter.ViewHolder holder, int position) {
+            holder.tvCategory.setText(matchInfoArrayList.get(position).category);
+            holder.tvTime.setText(matchInfoArrayList.get(position).time);
+            holder.tvArea.setText(matchInfoArrayList.get(position).area);
+            holder.tvRecruit_num.setText( matchInfoArrayList.get(position).recruit_num + " (" + matchInfoArrayList.get(position).team_name + ")");
         }
 
         @Override
         public int getItemCount() {
-            return recruitInfoArrayList.size();
+            return matchInfoArrayList.size();
         }
     }
 
     public void drawList() {
-        recruitInfoArrayList.clear();
+        matchInfoArrayList.clear();
         try {
             JSONArray items = mResult.getJSONArray("list");
 
@@ -272,15 +289,15 @@ public class ChildFragment1 extends Fragment {
                 SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
                 Date check_time = date_format.parse(date);
                 if(Menu3Fragment.select_year == check_time.getYear() && Menu3Fragment.select_month == check_time.getMonth()
-                    && Menu3Fragment.select_date == check_time.getDate() &&
-                        (info.getString("category").equals(Menu3Fragment.stCategory) || Menu3Fragment.stCategory.equals("ALL"))) {
+                        && Menu3Fragment.select_date == check_time.getDate() &&
+                        (info.getString("category").equals(Menu3Fragment.stCategory) || Menu3Fragment.stCategory.equals("전체"))) {
                     String category = info.getString("category");
                     String time = info.getString("time");
                     String area = info.getString("place");
-                    String total_num = info.getString("total_num");
+                    String team_name = info.getString("team_name");
                     String recruit_num = info.getString("recruit_num");
 
-                    recruitInfoArrayList.add(new recruitInfo(category, time, area, total_num, recruit_num));
+                    matchInfoArrayList.add(new matchInfo(category, time, area, team_name, recruit_num));
                 }
             }
 
@@ -295,8 +312,8 @@ public class ChildFragment1 extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    private void requestRecruit() {
-        String url = SessionManager.getURL() + "select_recruit.php";
+    private void requestMatch() {
+        String url = SessionManager.getURL() + "select_match.php";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 url, null,
                 new Response.Listener<JSONObject>() {
@@ -317,7 +334,7 @@ public class ChildFragment1 extends Fragment {
                         else {
                             Log.i(LOG_TAG, error.getMessage());
                             //Toast.makeText(getContext(), error.getMessage(),
-                              //      Toast.LENGTH_LONG).show();
+                            //      Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -326,13 +343,13 @@ public class ChildFragment1 extends Fragment {
     }
 
 
-    protected void writeRecruit(recruitInfo insert_data) {
-        String url = SessionManager.getURL() + "insert_recruit.php";
+    protected void writeMatch(matchInfo insert_data) {
+        String url = SessionManager.getURL() + "insert_match.php";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mSession.getID());
         params.put("category", insert_data.category);
-        params.put("total_num", insert_data.total_num);
+        params.put("team_name", insert_data.team_name);
         params.put("recruit_num", insert_data.recruit_num);
         params.put("time", insert_data.time);
         params.put("area", insert_data.area);
@@ -357,7 +374,7 @@ public class ChildFragment1 extends Fragment {
                             }
                         }
                         else
-                            requestRecruit();
+                            requestMatch();
                     }
                 },
                 new Response.ErrorListener() {
@@ -371,5 +388,4 @@ public class ChildFragment1 extends Fragment {
         request.setTag(QUEUE_TAG);
         mQueue.add(request);
     }
-
 }

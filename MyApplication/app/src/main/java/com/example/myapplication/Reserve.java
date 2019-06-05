@@ -9,6 +9,7 @@ import android.widget.Button;
 public class Reserve extends AppCompatActivity {
 
     Button btReserve;
+    Button btReview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +21,15 @@ public class Reserve extends AppCompatActivity {
             public void onClick(View v) {
                 Intent DateIntent = new Intent(Reserve.this, DateSelect.class);
                 Reserve.this.startActivity(DateIntent);
+            }
+        });
+
+        btReview = (Button) findViewById(R.id.ReviewButton);
+        btReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ReviewIntent = new Intent(Reserve.this, ReviewActivity.class);
+                Reserve.this.startActivity(ReviewIntent);
             }
         });
 

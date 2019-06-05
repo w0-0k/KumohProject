@@ -84,17 +84,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //-------
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
 
         //------
         navigationView.setNavigationItemSelectedListener(this);
         mSession = SessionManager.getInstance(this);
         if (mSession.isLogin()) {
             setNavEmail(mSession.getEmail());
+            navigationView.getMenu().findItem(R.id.nav_login).setTitle("로그아웃");
+            View headerView = navigationView.getHeaderView(0);
+            TextView tvEnd = (TextView) headerView.findViewById(R.id.textView18);
+            tvEnd.setText("님 환영합니다!");
         }
-        //------
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         // 첫 화면 지정
@@ -123,11 +124,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu, menu);
+
         return true;
     }
 
@@ -159,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setNavEmail(String email) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        TextView tv = (TextView) headerView.findViewById(R.id.textNavEmail);
-        tv.setText(email);
+        TextView tvNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
+        tvNavEmail.setText(email);
     }
     @Override
     protected void onStop() {
@@ -187,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (mSession.isLogin() == false)
             {
-
                 Intent intent = new Intent(this, SignupActivity.class);
                 startActivityForResult(intent, ACTIVITY_SIGNUP);
             }
@@ -196,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.LENGTH_SHORT).show();
             }
         }
-        else if (id == R.id.nav_login)
+        else if (id == R.id.nav_login && item.getTitle().equals("로그인"))
         {
             if (mSession.isLogin() == false) {
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -207,9 +209,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.LENGTH_SHORT).show();
             }
         }
-        else if (id == R.id.nav_logout)
+        else if (id == R.id.nav_login && item.getTitle().equals("로그아웃"))
         {
+            TextView tvNavEmail = (TextView)findViewById(R.id.textNavEmail);
+            tvNavEmail.setText("");
+            TextView tvEnd = (TextView)findViewById(R.id.textView18);
+            tvEnd.setText("오픈에어를 이용해 주셔서 감사합니다.");
+            item.setTitle("로그인");
             mSession.Logout();
+            Toast.makeText(this, "로그아웃되었습니다.",
+                    Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_info)
         {
@@ -238,8 +247,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.i(LOG_TAG, "LOGIN");
                     Toast.makeText(this, "로그인되었습니다.",
                             Toast.LENGTH_SHORT).show();
+                    NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+                    navigationView.getMenu().findItem(R.id.nav_login).setTitle("로그아웃");
                     TextView tv = (TextView)findViewById(R.id.textNavEmail);
                     tv.setText(mSession.getEmail());
+                    TextView tvEnd = (TextView)findViewById(R.id.textView18);
+                    tvEnd.setText("님 환영합니다!");
                 }
                 else {
                     Log.i(LOG_TAG, "Fail");
@@ -254,8 +267,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.i(LOG_TAG, "SIGNUP");
                     Toast.makeText(this, "회원 가입되었습니다.",
                             Toast.LENGTH_SHORT).show();
+                    NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+                    navigationView.getMenu().findItem(R.id.nav_login).setTitle("로그아웃");
                     TextView tv = (TextView)findViewById(R.id.textNavEmail);
                     tv.setText(mSession.getEmail());
+                    TextView tvEnd = (TextView)findViewById(R.id.textView18);
+                    tvEnd.setText("님 환영합니다!");
                 }
                 else {
 
