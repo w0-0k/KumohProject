@@ -1,0 +1,132 @@
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=18;email=1@1, PHPSESSID=76q934qbeikjptkorp2l2790ft; email=1%401; id=18
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=1;email=1@1, PHPSESSID=9a76bri3434enn4lsoc31fc63d; email=1%401; id=1
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=1;email=1@1, PHPSESSID=1l910icl28ogn575r6hau4l9jp; email=1%401; id=1
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=1;email=1@1
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=1;email=1@1, PHPSESSID=3e24o5v368dgppo608j67tnlvd; email=1%401; id=1
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
+Array
+(
+    [Host] => rnjsgur12.cafe24.com
+    [X-SERVER_PORT] => 80
+    [X-SERVER-PORT] => 80
+    [X-HOST] => rnjsgur12.cafe24.com
+    [X-SIMPLEXI] => 223.39.156.7
+    [X-SERVER_PROTOCOL] => HTTP/1.1
+    [X-SERVER-PROTOCOL] => HTTP/1.1
+    [X-Forwarded-Proto] => http
+    [HOSTING-COUNTRY-CODE] => KR
+    [HOSTING_COUNTRY_CODE] => KR
+    [HOSTING-CONTINENT-CODE] => AS
+    [HOSTING_CONTINENT_CODE] => AS
+    [HOSTING-WHITE-IP] => false
+    [HOSTING_WHITE_IP] => false
+    [Accept-Encoding] => gzip
+    [Connection] => close
+    [Cookie] => id=1;email=1@1, PHPSESSID=e62pciffb81q6p07aa3phlb91k; email=1%401; id=1
+    [User-Agent] => Dalvik/2.1.0 (Linux; U; Android 9; SM-G950N Build/PPR1.180610.011)
+)
+
