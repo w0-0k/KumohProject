@@ -313,7 +313,7 @@ public class ChildFragment2 extends Fragment {
     }
 
     private void requestMatch() {
-        String url = SessionManager.getURL() + "select_match.php";
+        String url = SessionManager.getURL() + "match/select_match.php";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 url, null,
                 new Response.Listener<JSONObject>() {
@@ -344,7 +344,7 @@ public class ChildFragment2 extends Fragment {
 
 
     protected void writeMatch(matchInfo insert_data) {
-        String url = SessionManager.getURL() + "insert_match.php";
+        String url = SessionManager.getURL() + "match/insert_match.php";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mSession.getID());

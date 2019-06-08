@@ -313,7 +313,7 @@ public class ChildFragment1 extends Fragment {
     }
 
     private void requestRecruit() {
-        String url = SessionManager.getURL() + "select_recruit.php";
+        String url = SessionManager.getURL() + "recruit/select_recruit.php";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 url, null,
                 new Response.Listener<JSONObject>() {
@@ -344,7 +344,7 @@ public class ChildFragment1 extends Fragment {
 
 
     protected void writeRecruit(recruitInfo insert_data) {
-        String url = SessionManager.getURL() + "insert_recruit.php";
+        String url = SessionManager.getURL() + "recruit/insert_recruit.php";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mSession.getID());

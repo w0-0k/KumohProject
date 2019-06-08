@@ -108,7 +108,8 @@
             android:foregroundGravity="top"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:tint="@android:color/white"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

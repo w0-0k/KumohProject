@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -15,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +37,7 @@ public class SessionManager {
     private static SessionManager sInstance;
 
     // TODO: 서버 주소 변경할 것
-    public static final String SERVER_ADDR = "http://rnjsgur12.cafe24.com/";
+    public static final String SERVER_ADDR = "http://rnjsgur12.cafe24.com/OPENAIR/";
     public static String getURL() { return SERVER_ADDR; }
 
     public static final String PREF_NAME = "SessionManagerPref";
@@ -40,6 +46,7 @@ public class SessionManager {
     public static final String KEY_ID = "id";
     public static final String KEY_EMAIL = "email";
 
+    static String f2_stCategory="전체";
     static Context mContext = null;
 
     protected RequestQueue mQueue = null;
@@ -132,11 +139,12 @@ public class SessionManager {
 
     //---------------------------------------------------------------------------
     public void Login(String email, String pass, Activity activity)  {
-        String url = SERVER_ADDR + "login.php";
+        String url = SERVER_ADDR + "users/login.php";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("pass", pass);
+        params.put("token", FirebaseInstanceId.getInstance().getToken());
         JSONObject jsonObj = new JSONObject(params);
 
         mEmailToLogin = email;
@@ -148,6 +156,7 @@ public class SessionManager {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        View focusView = null;
                         Log.i(LOG_TAG,"Response: " + response.toString());
                         try {
                             if (response.has("status")) {
@@ -159,14 +168,30 @@ public class SessionManager {
                                 }
                             }
                             else {
-                                Log.i(LOG_TAG,"Error: " +
-                                        response.getString("error"));
-                                Intent intent = new Intent();
-                                intent.putExtra("message",
-                                        response.getString("error"));
-                                mCurrentActivity.setResult(RESULT_OK, intent);
-                                mCurrentActivity.finish();
-                                mCurrentActivity = null;
+                                if (response.getString("error").
+                                        equals("Not exist e-mail")) {
+                                    AutoCompleteTextView tv = (AutoCompleteTextView) mCurrentActivity.findViewById(R.id.email);
+                                    tv.setError("Email does not exist.");
+                                    focusView = tv;
+                                    focusView.requestFocus();
+                                }
+                                else if (response.getString("error").
+                                        equals("Invalid password")) {
+                                    EditText tv = (EditText) mCurrentActivity.findViewById(R.id.password);
+                                    tv.setError("Invalid password.");
+                                    focusView = tv;
+                                    focusView.requestFocus();
+                                }
+                                else {
+                                    Log.i(LOG_TAG, "Error: " +
+                                            response.getString("error"));
+                                    Intent intent = new Intent();
+                                    intent.putExtra("message",
+                                            response.getString("error"));
+                                    mCurrentActivity.setResult(RESULT_OK, intent);
+                                    mCurrentActivity.finish();
+                                    mCurrentActivity = null;
+                                }
                             }
                         } catch (JSONException e) {
                             //e.printStackTrace();
@@ -231,13 +256,14 @@ public class SessionManager {
 
     //---------------------------------------------------------------------------
     public void Signup(String email, String pass, String pass2, String nick, Activity activity)  {
-        String url = SERVER_ADDR + "signup.php";
+        String url = SERVER_ADDR + "users/signup.php";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("email", email);
         params.put("pass", pass);
         params.put("pass2", pass2);
         params.put("nick", nick);
+        params.put("token", FirebaseInstanceId.getInstance().getToken());
         JSONObject jsonObj = new JSONObject(params);
 
         mEmailToLogin = email;
@@ -248,6 +274,7 @@ public class SessionManager {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        View focusView = null;
                         Log.i(LOG_TAG,"Response: " + response.toString());
                         try {
                             if (response.has("status")) {
@@ -262,16 +289,27 @@ public class SessionManager {
                                 Log.i(LOG_TAG,"Error: " +
                                         response.getString("error"));
                                 if (response.getString("error").
+                                        equals("Registered e-n")) {
+                                    AutoCompleteTextView tv = (AutoCompleteTextView) mCurrentActivity.findViewById(R.id.email);
+                                    tv.setError("Email already registered.");
+                                    EditText tv2 = (EditText) mCurrentActivity.findViewById(R.id.nickname);
+                                    tv2.setError("Nickname already registered.");
+                                    focusView = tv;
+                                    focusView.requestFocus();
+                                }
+                                else if (response.getString("error").
                                         equals("Registered e-mail")) {
-//                                    Toast.makeText(mContext, "이미 등록된 e-mail 주소입니다.",
-//                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("message",
-                                            //"이미 등록된 e-mail 주소입니다.");
-                                            response.getString("error"));
-                                    mCurrentActivity.setResult(RESULT_OK, intent);
-                                    mCurrentActivity.finish();
-                                    mCurrentActivity = null;
+                                    AutoCompleteTextView tv = (AutoCompleteTextView) mCurrentActivity.findViewById(R.id.email);
+                                    tv.setError("Email already registered.");
+                                    focusView = tv;
+                                    focusView.requestFocus();
+                                }
+                                else if (response.getString("error").
+                                        equals("Registered nick")) {
+                                    EditText tv = (EditText) mCurrentActivity.findViewById(R.id.nickname);
+                                    tv.setError("Nickname already registered.");
+                                    focusView = tv;
+                                    focusView.requestFocus();
                                 }
                                 else if (response.getString("error").
                                         equals("Querying Error")) {
@@ -350,7 +388,7 @@ public class SessionManager {
 
     //---------------------------------------------------------------------------
     public void Logout() {
-        String url = SERVER_ADDR + "logout.php";
+        String url = SERVER_ADDR + "users/logout.php";
 
         Map<String, String> params = new HashMap<String, String>();
         JSONObject jsonObj = new JSONObject(params);

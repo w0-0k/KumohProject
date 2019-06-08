@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.service.autofill.UserData;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -35,6 +36,15 @@ import com.example.myapplication.Menu2Fragment;
 import com.example.myapplication.Menu3Fragment;
 import com.example.myapplication.SessionManager;
 import com.example.myapplication.SignupActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,17 +52,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // FrameLayout에 각 메뉴의 Fragment를 바꿔 줌
     private FragmentManager fragmentManager = getSupportFragmentManager();
     // 3개의 메뉴에 들어갈 Fragment들
-    private Menu1Fragment menu1Fragment = new Menu1Fragment();
-    private Menu2Fragment menu2Fragment = new Menu2Fragment();
-    private Menu3Fragment menu3Fragment = new Menu3Fragment();
+    private Menu1Fragment menu1Fragment = null;
+    private Menu2Fragment menu2Fragment = null;
+    private Menu3Fragment menu3Fragment = null;
 
     //private DrawerLayout mDrawerLayout;
 
     //------------------------------------
 
     public static final String LOG_TAG = "LOGMainActivity";
-
-
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private final int ACTIVITY_LOGIN = 100;
     private final int ACTIVITY_SIGNUP = 101;
@@ -66,6 +75,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //추가한 라인
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseInstanceId.getInstance().getToken();
+
+        if (FirebaseInstanceId.getInstance().getToken() != null) {
+            Log.d(TAG, "Refreshed token main = " + FirebaseInstanceId.getInstance().getToken());
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView tvEnd = (TextView) headerView.findViewById(R.id.textView18);
             tvEnd.setText("님 환영합니다!");
         }
+
+        menu1Fragment = new Menu1Fragment();
+        menu2Fragment = new Menu2Fragment();
+        menu3Fragment = new Menu3Fragment();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         // 첫 화면 지정
@@ -223,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (id == R.id.nav_info)
         {
             // 서버에 웹 페이지 만들어서 연결할 것
+            sendPostToFCM("장욱이", "섹스");
         } else if (id == R.id.nav_copyright)
         {
             // 서버에 웹 페이지 만들어서 연결할 것
@@ -282,6 +310,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
         }
+    }
+
+
+
+
+    //////////////////////////////////////////
+
+
+    private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+    private static final String SERVER_KEY = "AAAA9L5lpRA:APA91bFEzsSfc3WykbzYJXgvKtkZ75KY_B39xnwUdKefYlkgkI-JcTClhPFNLysLXpV-y_NfTXex71mQcW5dwYkTJkRfpxyLLuXX5owWMahVbAFDkyCJ5ueu90cgjmXgsbp4V9hVFhYv";
+    private void sendPostToFCM(final String title, final String body) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // FMC 메시지 생성 start
+                    JSONObject root = new JSONObject();
+                    JSONObject notification = new JSONObject();
+                    notification.put("body", body);
+                    notification.put("title", title);
+                    root.put("notification", notification);
+                    root.put("to", "eVrnCHiXjGg:APA91bFuqO0PZwvOB5H5J7GOYZ78YElYfUytJdnyUUmQ7KqxPw13rCIlqUAtt_H94SEaQYdsfRdnYBQOAqkUlbuh0SWQlMcFS4bhoIcWOgTTKohT5mUL88HNBiJ09Uhw4LPqGn9iXzBW");
+                    //root.put("to", "fS5rE0mv4Sw:APA91bFyBzpzeIKU2zOXRj1Ri_blZt8Tor6vPpwekW4M03omF1jzjDkajw0HH7UBIekResRzTyt48kiGIBUOqgakMSPV4dKTWtbx3-eOkN-dV0btdFNJOJvTMslksh6l4sumztxEpCKO");
+                    // FMC 메시지 생성 end
+                     URL Url = new URL(FCM_MESSAGE_URL);
+                     HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                     conn.setRequestMethod("POST");
+                     conn.setDoOutput(true);
+                     conn.setDoInput(true);
+                     conn.addRequestProperty("Authorization", "key=" + SERVER_KEY);
+                     conn.setRequestProperty("Accept", "application/json");
+                     conn.setRequestProperty("Content-type", "application/json");
+                     OutputStream os = conn.getOutputStream();
+                     os.write(root.toString().getBytes("utf-8"));
+                     os.flush();
+                     conn.getResponseCode();
+                     }
+                catch (Exception e) {
+                     e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 
