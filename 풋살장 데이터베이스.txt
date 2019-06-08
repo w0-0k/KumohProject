@@ -1,0 +1,26 @@
+create table place_info (
+   place_no int(11) not null auto_increment,
+   name varchar(30),
+   image varchar(20),
+   info varchar(100),
+   star varchar(5),
+   price varchar(10),
+   number varchar(15),
+   location varchar(10),
+   address varchar(50),
+   primary key(place_no)
+) ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+Insert into place_info
+values
+(NULL,'지산해적풋살','store1.jpg',NULL,NULL,NULL,'054-458-7800','구미', '경상북도 구미시 지산동 627')
+(NULL,'강동풋살구장','store2.jpg',NULL,NULL,NULL,'054-472-0623','구미','경상북도 구미시 금전동 701-37')
+(NULL,'예스구미풋볼클럽','store3.jpg',NULL,NULL,NULL,'054-456-0707','구미','경상북도 구미시 공단동 257-16')
+(NULL,'금오풋살클럽','store4.jpg',NULL,NULL,NULL,'054-456-8490','구미','경상북도 구미시 광평동 화신로4길 4')
+(NULL,'스피드풋살클럽','store5.jpg',NULL,NULL,NULL,'054-442-9494','구미','경상북도 구미시 봉곡동 178')
+(NULL,'비바풋살클럽','store6.jpg',NULL,NULL,NULL,'054-457-7782','구미','경상북도 구미시 고아읍 송림리 382-1')
+(NULL,'남구미풋살존',NULL,NULL,NULL,NULL,'054-462-8484','구미','경상북도 구미시 오태동 산94-18')
+(NULL,'킹풋살구장','store8.jpg',NULL,NULL,NULL,'054-476-1313','구미','경상북도 구미시 인동동 329-1')
+(NULL,'LM풋살파크','store9.jpg',NULL,NULL,NULL,'054-444-1016','구미','경상북도 구미시 원평동 1008-1번지 6층 경부선구미종합역사')
+
+
